@@ -51,6 +51,7 @@ def build_layer0_lr_pipeline(X):
         max_iter=2000,
         solver="lbfgs",
         random_state=RANDOM_STATE
+        class_weight="balanced",
     )
 
     pipe = Pipeline(steps=[
