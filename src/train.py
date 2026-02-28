@@ -4,15 +4,21 @@ import argparse
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
-from sklearn.pipeline import Pipeline as SkPipeline
-from imblearn.pipeline import Pipeline as ImbPipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.pipeline import Pipeline as SkPipeline  # Pour les sous-pipelines
+
+from imblearn.pipeline import Pipeline as ImbPipeline  # Pipeline compatible SMOTE
+from imblearn.over_sampling import SMOTE
 
 from data_loader import load_credit_data, make_split
-from evaluate import evaluate_binary_classifier, pretty_print_metrics
+from evaluate import (
+    evaluate_binary_classifier,
+    pretty_print_metrics,
+    find_optimal_threshold,
+)
 
-RANDOM_STATE = 42
+RANDOM_STATE = 4242
 
 
 def build_preprocessor(X, use_scaler: bool):
