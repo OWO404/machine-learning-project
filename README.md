@@ -1,6 +1,6 @@
-##Credit Default Prediction – Machine Learning Project
+## Credit Default Prediction – Machine Learning Project
 
-#1. Project Overview
+# 1. Project Overview
 
 This project aims to predict credit card default using the UCI Credit Card Default dataset.
 
@@ -20,7 +20,7 @@ Threshold optimization
 
 The project adopts a decision-oriented perspective, minimizing an asymmetric financial cost function rather than maximizing accuracy alone.
 
-#2. Repository Structure
+# 2. Repository Structure
    
 data/raw/
     UCI_Credit_Card.csv
@@ -33,7 +33,7 @@ src/
     evaluate.py
     train.py
     
-#Folder description
+# Folder description
 
 data/raw/
 Contains the original dataset.
@@ -73,7 +73,7 @@ src/data_loader.py
 Dataset loading and preprocessing utilities.
 
 
-#3. Experimental Framework
+# 3. Experimental Framework
 
 Stratified train/test split (80/20)
 
@@ -93,7 +93,7 @@ c_FN = 5
 c_FP = 1
 
 
-#4. Running the Project
+# 4. Running the Project
 
 From the root folder:
 
@@ -113,7 +113,7 @@ Example:
 
 python train.py --model mlp
 
-#5. Main Findings
+# 5. Main Findings
 
 Gradient Boosting achieves the best PR-AUC and lowest financial cost.
 
@@ -124,7 +124,7 @@ Threshold optimization significantly improves decision quality under asymmetric 
 Class rebalancing modifies recall but does not improve intrinsic discrimination.
 
 
-#6. Reproducibility
+# 6. Reproducibility
 
 Fixed random_state in all models
 
