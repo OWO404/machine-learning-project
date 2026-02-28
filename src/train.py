@@ -1,3 +1,4 @@
+from sklearn.neural_network import MLPClassifier
 import argparse
 
 from sklearn.compose import ColumnTransformer
@@ -79,7 +80,20 @@ def build_model(model_name: str):
 
     raise ValueError(f"Modèle inconnu: {model_name}")
 
-
+    if model_name == "mlp":
+        return MLPClassifier(
+            hidden_layer_sizes=(64, 32),
+            activation="relu",
+            solver="adam",
+            alpha=1e-4,                 # régularisation L2
+            batch_size=256,
+            learning_rate_init=1e-3,
+            max_iter=200,
+            early_stopping=True,        # arrêt anticipé via validation interne
+            validation_fraction=0.1,
+            n_iter_no_change=10,
+            random_state=RANDOM_STATE
+        )
 def build_pipeline(X_train, model_name: str):
     """
     Construit une pipeline complète.
@@ -112,7 +126,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--csv", type=str, default="data/raw/UCI_Credit_Card.csv")
     parser.add_argument("--model", type=str, default="rf",
-                        choices=["lr_base", "lr_balanced", "lr_smote", "rf", "gb"])
+                        choices=["lr_base", "lr_balanced", "lr_smote", "rf", "gb","mlp"])
     parser.add_argument("--c_fn", type=float, default=5.0)
     parser.add_argument("--c_fp", type=float, default=1.0)
     args = parser.parse_args()
