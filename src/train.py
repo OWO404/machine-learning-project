@@ -1,3 +1,4 @@
+from sklearn.model_selection import StratifiedKFold, RandomizedSearchCV
 from sklearn.neural_network import MLPClassifier
 import argparse
 
@@ -139,6 +140,7 @@ def main():
                         choices=["lr_base", "lr_balanced", "lr_smote", "rf", "gb","mlp"])
     parser.add_argument("--c_fn", type=float, default=5.0)
     parser.add_argument("--c_fp", type=float, default=1.0)
+    parser.add_argument("--tune", action="store_true", help="Active la recherche d'hyperparamètres (GB)")
     args = parser.parse_args()
 
     X, y = load_credit_data(args.csv)
@@ -148,25 +150,56 @@ def main():
     print(f"Variables     : {X.shape[1]}")
     print(f"Taux de défaut: {ratio:.4%}")
     print(f"Modèle        : {args.model}")
+    from scipy.stats import randint
+    
 
     X_train, X_test, y_train, y_test = make_split(X, y, test_size=0.2)
 
     pipe = build_pipeline(X_train, model_name=args.model)
-    pipe.fit(X_train, y_train)
+    
+    if args.model == "gb" and args.tune:
+       cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
+
+       param_distrib = {
+        "model__n_estimators": randint(100, 501),
+        "model__learning_rate": [0.01, 0.05, 0.1, 0.2],
+        "model__max_depth": randint(2, 5),
+        "model__subsample": [0.7, 0.85, 1.0],
+         }
+
+       search = RandomizedSearchCV(
+        estimator=pipe,
+        param_distributions=param_distrib,
+        n_iter=20,
+        scoring="average_precision",  # PR-AUC (recommandé en déséquilibré)
+        cv=cv,
+        n_jobs=-1,
+        random_state=RANDOM_STATE,
+        verbose=1
+    )
+
+          search.fit(X_train, y_train)
+       pipe = search.best_estimator_
+       print("\n=== Hyperparameter tuning (GB) ===")
+       print("Best params:", search.best_params_)
+       print(f"Best CV PR-AUC: {search.best_score_:.4f}")
+    else:
+      pipe.fit(X_train, y_train)
+
 
     # Probabilités classe positive (défaut)
-    y_proba = pipe.predict_proba(X_test)[:, 1]
+       y_proba = pipe.predict_proba(X_test)[:, 1]
 
     # Évaluation standard (seuil 0.5)
-    metrics = evaluate_binary_classifier(y_test.to_numpy(), y_proba, threshold=0.5)
-    pretty_print_metrics(metrics)
+       metrics = evaluate_binary_classifier(y_test.to_numpy(), y_proba, threshold=0.5)
+       pretty_print_metrics(metrics)
 
     # Optimisation du seuil sous coût asymétrique
-    best = find_optimal_threshold(
-        y_test.to_numpy(), y_proba,
-        c_fn=args.c_fn, c_fp=args.c_fp,
-        t_min=0.05, t_max=0.95, n_grid=181
-    )
+       best = find_optimal_threshold(
+           y_test.to_numpy(), y_proba,
+           c_fn=args.c_fn, c_fp=args.c_fp,
+           t_min=0.05, t_max=0.95, n_grid=181
+       )
 
     print("\n=== Optimisation du seuil (Coût asymétrique) ===")
     print(f"c_FN={args.c_fn:.1f}, c_FP={args.c_fp:.1f}")
