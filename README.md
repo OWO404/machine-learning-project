@@ -65,7 +65,7 @@ c_FP = 1
 
 Depuis le dossier src :
 
-python train.py --model gb
+python src/train.py --model gb
 
 Modèles disponibles :
 
@@ -80,6 +80,9 @@ rf
 gb
 
 mlp
+
+Pour lancer l’optimisation d’hyperparamètres (GB) :
+python src/train.py --model gb --tune
 
 ## 5. Résultats principaux
 
