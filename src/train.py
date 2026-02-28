@@ -105,7 +105,7 @@ def build_model(model_name: str):
         )
     raise ValueError(f"Modèle inconnu: {model_name}")
     
-    def build_pipeline(X_train, model_name: str):
+def build_pipeline(X_train, model_name: str):
     """
     Construit une pipeline complète.
     SMOTE est activé uniquement pour l'option lr_smote.
