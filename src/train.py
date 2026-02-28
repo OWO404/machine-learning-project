@@ -86,7 +86,7 @@ def build_model(model_name: str):
             random_state=RANDOM_STATE
         )
 
-    raise ValueError(f"Modèle inconnu: {model_name}")
+
 
     if model_name == "mlp":
         return MLPClassifier(
@@ -102,13 +102,15 @@ def build_model(model_name: str):
             n_iter_no_change=10,
             random_state=RANDOM_STATE
         )
-def build_pipeline(X_train, model_name: str):
+    raise ValueError(f"Modèle inconnu: {model_name}")
+    
+    def build_pipeline(X_train, model_name: str):
     """
     Construit une pipeline complète.
     SMOTE est activé uniquement pour l'option lr_smote.
     """
     # Scaling utile pour LR / MLP ; inutile pour RF/GB
-    use_scaler = model_name in {"lr_base", "lr_balanced", "lr_smote"}
+    use_scaler = model_name in {"lr_base", "lr_balanced", "lr_smote", "mlp"}
     preproc = build_preprocessor(X_train, use_scaler=use_scaler)
 
     if model_name == "lr_smote":
