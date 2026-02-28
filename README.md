@@ -1,27 +1,26 @@
-## Credit Default Prediction – Machine Learning Project
+# Prédiction du Défaut de Crédit – Projet Machine Learning
 
-# 1. Project Overview
+## 1. Objectif du projet
 
-This project aims to predict credit card default using the UCI Credit Card Default dataset.
+Ce projet vise à prédire le défaut de paiement de cartes de crédit à partir du dataset UCI Credit Card Default.
 
-The objective is not only to compare predictive performance, but to build a rigorous machine learning pipeline, including:
+L’objectif est double :
 
-Structured preprocessing
+Construire une pipeline rigoureuse et reproductible
 
-Handling class imbalance
+Comparer différents modèles dans une logique décisionnelle orientée coût
 
-Comparison of classical and deep learning models
+Le projet ne se limite pas à maximiser l’accuracy, mais intègre :
 
-Cross-validation framework
+Gestion du déséquilibre de classes
 
-Cost-sensitive decision analysis
+Validation croisée stratifiée
 
-Threshold optimization
+Comparaison modèles linéaires / arborescents / deep learning
 
-The project adopts a decision-oriented perspective, minimizing an asymmetric financial cost function rather than maximizing accuracy alone.
+Optimisation du seuil sous contrainte de coût asymétrique
 
-# 2. Repository Structure
-   
+## 2. Structure du dépôt
 data/raw/
     UCI_Credit_Card.csv
 
@@ -32,104 +31,72 @@ src/
     data_loader.py
     evaluate.py
     train.py
-    
-# Folder description
+Description
 
-data/raw/
-Contains the original dataset.
+data/raw/ : données originales
 
-notebook/EDA.ipynb
-Exploratory Data Analysis:
+notebook/EDA.ipynb : analyse exploratoire (déséquilibre, distributions, corrélations)
 
-Class imbalance analysis
+src/train.py : script principal d’entraînement et d’évaluation
 
-Distribution study
+src/evaluate.py : métriques d’évaluation
 
-Correlation matrix
+src/data_loader.py : chargement et préparation des données
 
-Conditional default analysis
+## 3. Cadre expérimental
 
-src/train.py
-Main training script implementing:
+Séparation train/test stratifiée (80/20)
 
-Train/test split (stratified)
+Validation croisée stratifiée à 5 plis
 
-Stratified 5-fold cross-validation
+Pipeline intégrée (prétraitement + modèle)
 
-Logistic Regression
+Gestion du déséquilibre (class_weight / SMOTE)
 
-Random Forest
+Optimisation du seuil via fonction de coût :
 
-Gradient Boosting
+Coût = c_FN × FN + c_FP × FP
 
-MLP (Neural Network)
-
-Cost-sensitive threshold optimization
-
-src/evaluate.py
-Contains evaluation metrics and confusion matrix logic.
-
-src/data_loader.py
-Dataset loading and preprocessing utilities.
-
-
-# 3. Experimental Framework
-
-Stratified train/test split (80/20)
-
-Stratified 5-fold cross-validation
-
-StandardScaler applied where required
-
-Optional SMOTE for imbalance handling
-
-Threshold optimization based on asymmetric cost:
-
-Cost=cFN​×FN+cFP​×FP
-
-Default ratio used:
-
+avec :
 c_FN = 5
 c_FP = 1
 
+## 4. Exécution
 
-# 4. Running the Project
+Depuis le dossier src :
 
-From the root folder:
-
-cd src
 python train.py --model gb
 
-Available models:
+Modèles disponibles :
 
 lr_base
+
 lr_balanced
+
 lr_smote
+
 rf
+
 gb
+
 mlp
 
-Example:
+## 5. Résultats principaux
 
-python train.py --model mlp
+Le Gradient Boosting obtient la meilleure PR-AUC et le coût minimal.
 
-# 5. Main Findings
+Les modèles arborescents surpassent la régression logistique.
 
-Gradient Boosting achieves the best PR-AUC and lowest financial cost.
+Le MLP n’apporte pas d’amélioration significative par rapport au boosting.
 
-Deep Learning (MLP) does not outperform tree-based models on structured tabular data.
+L’optimisation du seuil améliore fortement la décision économique.
 
-Threshold optimization significantly improves decision quality under asymmetric cost.
+## 6. Reproductibilité
 
-Class rebalancing modifies recall but does not improve intrinsic discrimination.
+random_state fixé
 
+Pipeline intégrée
 
-# 6. Reproducibility
+Jeu de test isolé
 
-Fixed random_state in all models
-
-Pipeline-based preprocessing
-
-Isolated test set
-
-Controlled environment
+Environnement contrôlé
