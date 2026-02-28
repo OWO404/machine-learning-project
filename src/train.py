@@ -5,6 +5,8 @@ from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
+from sklearn.pipeline import Pipeline as SkPipeline
+from imblearn.pipeline import Pipeline as ImbPipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 from data_loader import load_credit_data, make_split
