@@ -170,12 +170,12 @@ def main():
         search = RandomizedSearchCV(
             estimator=pipe,
             param_distributions=param_distrib,
-            n_iter=20,
+            n_iter=8,
             scoring="average_precision",  # PR-AUC (recommandé en déséquilibré)
-            cv=cv,
-            n_jobs=-1,
+            cv=3,
+            n_jobs=1,
             random_state=RANDOM_STATE,
-            verbose=1
+            verbose=2
         )
 
         search.fit(X_train, y_train)
