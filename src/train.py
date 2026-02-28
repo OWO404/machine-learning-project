@@ -135,7 +135,7 @@ def build_pipeline(X_train, model_name: str):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--csv", type=str, default="data/raw/UCI_Credit_Card.csv")
+    parser.add_argument("--csv", type=str, default="machine-learning-project/data/raw/UCI_Credit_Card.csv")
     parser.add_argument("--model", type=str, default="rf",
                         choices=["lr_base", "lr_balanced", "lr_smote", "rf", "gb","mlp"])
     parser.add_argument("--c_fn", type=float, default=5.0)
